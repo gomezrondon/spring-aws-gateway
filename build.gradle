@@ -1,3 +1,7 @@
+import com.amazonaws.services.lambda.model.InvocationType
+import jp.classmethod.aws.gradle.lambda.AWSLambdaInvokeTask
+import jp.classmethod.aws.gradle.lambda.AWSLambdaMigrateFunctionTask
+
 buildscript {
 	ext {
 		springBootPlugin = 'org.springframework.boot:spring-boot-gradle-plugin'
@@ -7,23 +11,24 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
-		classpath("${springBootPlugin}:${springBootVersion}")
-		classpath("${thinPlugin}:${thinVersion}")
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.4.RELEASE'
+		classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
+        classpath "jp.classmethod.aws:gradle-aws-plugin:0.30"
 	}
 }
 
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'jp.classmethod.aws'
+apply plugin: 'jp.classmethod.aws.lambda'
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-//add tasks thinJar and thinResolve for thin JAR deployments
-apply plugin: 'org.springframework.boot.experimental.thin-launcher'
 
-
-group = 'com.gomezrondon'
-version = '0.0.1-SNAPSHOT'
+group = 'example'
+version = '0.0.14'
 sourceCompatibility = '1.8'
 
 repositories {
@@ -34,24 +39,17 @@ ext {
 	set('springCloudVersion', 'Greenwich.SR1')
 }
 
+
 dependencies {
-	implementation 'org.springframework.cloud:spring-cloud-starter-function-web'// solo for testing loca
-	implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws'
-	implementation 'com.amazonaws:aws-lambda-java-core:1.2.0'
+	compile 'com.amazonaws:aws-lambda-java-core:1.2.0'
+	compile 'com.amazonaws:aws-lambda-java-events:2.1.0'
+//	compile 'com.amazonaws:aws-java-sdk-s3:1.11.308'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.cloud:spring-cloud-starter-function-web'
+	implementation 'org.springframework.cloud:spring-cloud-function-web'
+	compile 'org.springframework.cloud:spring-cloud-function-adapter-aws'
 }
 
-
-springBoot {
-	mainClassName = 'com.gomezrondon.springawsgateway.Application'
-}
-
-bootJar {
-//    This is overridden by the mainClassName in springBoot{} and added here for reference purposes.
-	mainClassName = 'com.gomezrondon.springawsgateway.Application'
-
-}
 
 dependencyManagement {
 	imports {
@@ -59,20 +57,50 @@ dependencyManagement {
 	}
 }
 
-//Enable this to generate and use a pom.xml file
-apply plugin: 'maven'
+ext {
+	mainClass = 'example.Application'
+}
 
-//If you want to customize the generated pom.xml you can edit this task and add it as a dependency to the bootJar task
-task createPom {
-	def basePath = 'build/resources/main/META-INF/maven'
-	doLast {
-		pom {
-			withXml(dependencyManagement.pomConfigurer)
-		}.writeTo("${basePath}/${project.group}/${project.name}/pom.xml")
+shadowJar {
+	classifier = 'aws'
+	mergeServiceFiles()
+	mergeGroovyExtensionModules()
+	manifest {
+		attributes(
+				'Main-Class': mainClass,
+				'Start-Class': mainClass,
+				'Spring-Boot-Classes': ''
+		)
+	}
+	dependencies {
+		exclude dependency("org.springframework.cloud:spring-cloud-function-web")
+		exclude dependency("org.springframework.cloud:spring-cloud-starter-function-web")
+	}
+	transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
+		mergeSeparator = ','
+		mergeStrategy = 'append'
+		paths = [
+				'META-INF/spring.factories',
+				'META-INF/spring.handlers',
+				'META-INF/spring.provides',
+				'META-INF/spring.schemas',
+				'META-INF/spring.tooling',
+				'META-INF/spring-autoconfigure-metadata.properties',
+		]
 	}
 }
-//Uncomment the following to use your custom generated pom.xml
-bootJar.dependsOn = [createPom]
 
-//Enable this to generate and use a thin.properties file
-//bootJar.dependsOn = [thinProperties]
+
+assemble.dependsOn shadowJar
+
+task deployFunction(type: AWSLambdaMigrateFunctionTask, dependsOn: [assemble, test]) {
+	functionName = "reverseString"
+	runtime = com.amazonaws.services.lambda.model.Runtime.Java8
+	role = "arn:aws:iam::${aws.accountId}:role/hello-lambda-role"
+
+	zipFile = shadowJar.archivePath
+	handler = "example.Handler"
+	memorySize = 512
+	timeout = 45
+}
+
