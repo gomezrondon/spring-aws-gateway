@@ -96,7 +96,7 @@ assemble.dependsOn shadowJar
 task deployFunction(type: AWSLambdaMigrateFunctionTask, dependsOn: [assemble, test]) {
 	functionName = "reverseString"
 	runtime = com.amazonaws.services.lambda.model.Runtime.Java8
-	role = "arn:aws:iam::${aws.accountId}:role/hello-lambda-role"
+	role = "arn:aws:iam::${aws.accountId}:role/<your-lambda-role>"
 
 	zipFile = shadowJar.archivePath
 	handler = "example.Handler"
