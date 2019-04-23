@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Reverse a String and add a time stamp.
+Resources:
+  reverseFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: example.Handler
+      Runtime: java8
+      CodeUri: ./build/libs/spring-aws-gateway-0.0.1-aws.jar
+      Description: 'Reverse a String and add a time stamp.'
+      MemorySize: 256
+      Timeout: 30
+      Role: 'arn:aws:iam::<**account**>:role/<**lambda-role**>'
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /reverseString
+            Method: GET
+      Environment:
+        Variables:
+          FUNCTION_NAME: reverseString

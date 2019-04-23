@@ -20,8 +20,8 @@ public class Application {
 	}
 
 	@Bean
-	public Function<String, String> reverseString() {
-		return value -> new StringBuilder(value).reverse().toString() + service.getTime();
+	public Function<Payload, String> reverseString() {
+		return value -> new StringBuilder(value.getValor()).reverse().toString() + service.getTime();
 	}
 
 }
