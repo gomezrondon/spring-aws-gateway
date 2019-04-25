@@ -1,0 +1,87 @@
+{
+  "message": ">>>>>>> Go Serverless v1.x! Your function executed successfully!",
+  "input": {
+    "resource": "/reverseString",
+    "path": "/reverseString",
+    "httpMethod": "GET",
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+      "accept-encoding": "gzip, deflate, br",
+      "accept-language": "es,en-US;q=0.9,en;q=0.8",
+      "Host": "tbchwygjca.execute-api.us-east-1.amazonaws.com",
+      "upgrade-insecure-requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36",
+      "X-Amzn-Trace-Id": "Root=1-5cc12ed8-0970e7332aaa65244067c615",
+      "X-Forwarded-For": "201.192.182.210",
+      "X-Forwarded-Port": "443",
+      "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+      "accept": [
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3"
+      ],
+      "accept-encoding": [
+        "gzip, deflate, br"
+      ],
+      "accept-language": [
+        "es,en-US;q=0.9,en;q=0.8"
+      ],
+      "Host": [
+        "tbchwygjca.execute-api.us-east-1.amazonaws.com"
+      ],
+      "upgrade-insecure-requests": [
+        "1"
+      ],
+      "User-Agent": [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
+      ],
+      "X-Amzn-Trace-Id": [
+        "Root=1-5cc12ed8-0970e7332aaa65244067c615"
+      ],
+      "X-Forwarded-For": [
+        "201.192.182.210"
+      ],
+      "X-Forwarded-Port": [
+        "443"
+      ],
+      "X-Forwarded-Proto": [
+        "https"
+      ]
+    },
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+      "resourceId": "563xd3",
+      "resourcePath": "/reverseString",
+      "httpMethod": "GET",
+      "extendedRequestId": "YrRB0GgyoAMFrFg=",
+      "requestTime": "25/Apr/2019:03:51:52 +0000",
+      "path": "/stage-1/reverseString",
+      "accountId": "211620672909",
+      "protocol": "HTTP/1.1",
+      "stage": "stage-1",
+      "domainPrefix": "tbchwygjca",
+      "requestTimeEpoch": 1556164312432,
+      "requestId": "760d00b2-670d-11e9-a309-2d1951b82c6b",
+      "identity": {
+        "cognitoIdentityPoolId": null,
+        "accountId": null,
+        "cognitoIdentityId": null,
+        "caller": null,
+        "sourceIp": "201.192.182.210",
+        "accessKey": null,
+        "cognitoAuthenticationType": null,
+        "cognitoAuthenticationProvider": null,
+        "userArn": null,
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36",
+        "user": null
+      },
+      "domainName": "tbchwygjca.execute-api.us-east-1.amazonaws.com",
+      "apiId": "tbchwygjca"
+    },
+    "body": null,
+    "isBase64Encoded": false
+  }
+}
